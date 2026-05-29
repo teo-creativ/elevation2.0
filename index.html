@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elevation 2.0 — L'échelle de pompier repensée</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red: #C62828;
+      --red-dark: #B71C1C;
+      --red-light: #FFCDD2;
+      --black: #0f0f0f;
+      --gray: #f5f5f5;
+      --text: #1a1a1a;
+      --muted: #666;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      color: var(--text);
+      background: #fff;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(198,40,40,0.97);
+      backdrop-filter: blur(8px);
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: #fff; }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      background: var(--red);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px 24px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-flames {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.07;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(52px, 10vw, 96px);
+      font-weight: 900;
+      color: #fff;
+      text-transform: uppercase;
+      line-height: 0.95;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-version {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(52px, 10vw, 96px);
+      font-weight: 900;
+      color: rgba(255,255,255,0.25);
+      text-transform: uppercase;
+      line-height: 0.95;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-accroche {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(22px, 4vw, 36px);
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+      margin-bottom: 48px;
+    }
+
+    .badge {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 4px;
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      background: #fff;
+      color: var(--red);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 4px;
+      position: relative;
+      z-index: 2;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      animation: bounce 2s infinite;
+    }
+
+    .hero-scroll span {
+      font-size: 9px;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 80px 24px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--red);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 900;
+      color: var(--black);
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 40px;
+    }
+
+    /* VIDEO */
+    .video-section {
+      background: var(--black);
+      padding: 80px 24px;
+    }
+
+    .video-section .section-label { color: var(--red-light); }
+    .video-section .section-title { color: #fff; }
+
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      aspect-ratio: 16/9;
+      background: #1a1a1a;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .video-placeholder-icon {
+      width: 64px;
+      height: 64px;
+      border: 2px solid rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-placeholder p {
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    /* CHALLENGES */
+    .challenges-section { background: var(--gray); }
+
+    .challenges-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .challenge-card {
+      background: #fff;
+      border: 1px solid #ebebeb;
+      border-radius: 10px;
+      padding: 24px;
+      border-top: 3px solid var(--red);
+    }
+
+    .ch-num {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--red);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .ch-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--black);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .ch-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 44px;
+      font-weight: 900;
+      color: var(--red);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .ch-exig {
+      font-size: 11px;
+      color: #aaa;
+      margin-bottom: 12px;
+    }
+
+    .ch-desc {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.55;
+      padding-top: 12px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    /* MÉCANISMES */
+    .mecas-grid {
+      display: grid;
+      gap: 32px;
+    }
+
+    .meca-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      padding-bottom: 32px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .meca-item:last-child { border-bottom: none; }
+
+    .meca-item.reverse { direction: rtl; }
+    .meca-item.reverse > * { direction: ltr; }
+
+    .meca-img {
+      aspect-ratio: 4/3;
+      background: var(--gray);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid #ebebeb;
+    }
+
+    .meca-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .meca-img-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #ccc;
+    }
+
+    .meca-img-placeholder p {
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 0 16px;
+    }
+
+    .meca-num {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--red);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .meca-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 30px;
+      font-weight: 900;
+      color: var(--black);
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .meca-value {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--red);
+      background: #fff5f5;
+      border: 1px solid #fde0e0;
+      border-radius: 4px;
+      padding: 4px 12px;
+      margin-bottom: 14px;
+    }
+
+    .meca-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    @media (max-width: 640px) {
+      .meca-item {
+        grid-template-columns: 1fr;
+      }
+      .meca-item.reverse { direction: ltr; }
+    }
+
+    /* ÉCOCONCEPTION */
+    .eco-section { background: var(--black); }
+    .eco-section .section-label { color: var(--red-light); }
+    .eco-section .section-title { color: #fff; }
+
+    .eco-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .eco-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 24px 20px;
+    }
+
+    .eco-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(198,40,40,0.3);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .eco-card-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .eco-card-desc {
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.6;
+    }
+
+    /* ÉQUIPE */
+    .team-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .team-card {
+      text-align: center;
+      width: 130px;
+    }
+
+    .team-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--gray);
+      border: 2px solid #ebebeb;
+      margin: 0 auto 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .team-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .team-initials {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--red);
+    }
+
+    .team-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--black);
+      margin-bottom: 2px;
+    }
+
+    .team-role {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--red-dark);
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 32px;
+      font-weight: 900;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .footer-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .footer-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+      max-width: 200px;
+      margin: 0 auto 24px;
+    }
+
+    .footer-bottom {
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 1px;
+    }
+
+    /* ANIMATIONS */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C12 2 17 7 17 13C17 16 15.5 17.5 14.5 17.5C14.5 14.5 13 12 12 10.5C12 10.5 10 13.5 10 17.5C9 17.5 7 16 7 13C7 8 10.5 4.5 12 2Z" fill="white"/>
+        <path d="M12 12C12 12 14 14.5 14 17C14 19.2 13 20.5 12 20.5C11 20.5 10 19.2 10 17C10 14.5 12 12 12 12Z" fill="rgba(255,200,200,0.9)"/>
+      </svg>
+      <span class="nav-logo-text">Elevation 2.0</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#video">Vidéo</a></li>
+      <li><a href="#challenges">Challenges</a></li>
+      <li><a href="#mecanismes">Mécanismes</a></li>
+      <li><a href="#ecoconception">Écoconception</a></li>
+      <li><a href="#equipe">Équipe</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <svg class="hero-flames" viewBox="0 0 1200 800" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M100 800 C70 720 30 670 55 590 C80 510 105 490 90 410 C120 460 135 520 115 570 C148 520 162 450 135 380 C170 425 188 500 162 560 C180 525 192 478 175 420 C200 465 204 535 182 595 C205 558 212 503 193 445 C222 502 228 580 204 650 C228 615 234 562 218 503 C240 562 240 638 220 710 Z"/>
+      <path d="M400 800 C365 710 315 652 348 562 C380 472 412 450 395 362 C430 415 447 478 425 535 C464 480 480 405 450 328 C492 378 512 460 485 525 C508 486 522 432 502 368 C530 418 534 496 508 568 C535 530 542 468 522 402 C556 464 562 550 534 628 C558 590 565 528 547 464 C572 530 572 614 550 696 Z"/>
+      <path d="M750 800 C718 718 672 664 700 580 C728 496 755 475 740 392 C772 442 786 502 765 555 C800 502 815 430 787 357 C825 404 842 482 816 544 C837 508 850 458 830 396 C856 443 860 516 836 586 C860 550 867 490 848 428 C880 490 886 570 860 644 C882 608 888 548 870 486 C893 550 893 630 872 706 Z"/>
+      <path d="M1100 800 C1072 724 1030 674 1054 596 C1078 518 1100 498 1087 420 C1116 468 1128 524 1109 574 C1140 524 1153 455 1128 386 C1162 430 1178 504 1153 562 C1172 528 1184 480 1165 420 C1190 464 1194 533 1172 598 C1194 564 1200 506 1182 448 C1203 506 1203 582 1184 652 Z"/>
+    </svg>
+
+    <p class="hero-eyebrow">PIX1 · ESILV · Showroom Paris · 2 juin 2026</p>
+    <h1 class="hero-title">Elevation</h1>
+    <div class="hero-version">2.0</div>
+    <p class="hero-accroche">Tourner · Déployer · Incliner</p>
+    <div class="hero-badges">
+      <span class="badge">100 % manuel</span>
+      <span class="badge">100 % mécanique</span>
+      <span class="badge">Bois découpé laser</span>
+      <span class="badge">0 moteur</span>
+    </div>
+    <a href="#video" class="hero-cta">Voir la vidéo →</a>
+    <div class="hero-scroll">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8L10 13L15 8" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Découvrir</span>
+    </div>
+  </section>
+
+  <!-- VIDEO -->
+  <section class="video-section" id="video">
+    <div class="container">
+      <p class="section-label">Présentation</p>
+      <h2 class="section-title">La vidéo du projet</h2>
+      <div class="video-wrapper">
+        <!--
+          POUR AJOUTER LA VIDÉO :
+          Option YouTube : remplace le contenu ci-dessous par :
+          <iframe src="https://www.youtube.com/embed/TON_ID_VIDEO" allowfullscreen></iframe>
+
+          Option Google Drive : remplace par :
+          <iframe src="https://drive.google.com/file/d/TON_ID_FICHIER/preview"></iframe>
+        -->
+        <div class="video-placeholder">
+          <div class="video-placeholder-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M10 8L20 14L10 20V8Z" fill="rgba(255,255,255,0.4)"/></svg>
+          </div>
+          <p>Vidéo à venir</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHALLENGES -->
+  <section class="challenges-section" id="challenges">
+    <div class="container">
+      <p class="section-label fade-in">Cahier des charges</p>
+      <h2 class="section-title fade-in">Challenges techniques</h2>
+      <div class="challenges-grid">
+
+        <div class="challenge-card fade-in">
+          <p class="ch-num">Challenge 01</p>
+          <h3 class="ch-title">Rotation</h3>
+          <div class="ch-value">360°</div>
+          <p class="ch-exig">Exigé : 90°</p>
+          <p class="ch-desc">Double pignon — un grand disque en base, un petit pignon-manivelle actionnable à la main. Rotation fluide et continue sans à-coup.</p>
+        </div>
+
+        <div class="challenge-card fade-in">
+          <p class="ch-num">Challenge 02</p>
+          <h3 class="ch-title">Déploiement</h3>
+          <div class="ch-value">×2</div>
+          <p class="ch-exig">Guidé · Stable · Réversible</p>
+          <p class="ch-desc">Télescopique, actionné par mécanisme manuel. Maintenu en position en fin de course par butée.</p>
+        </div>
+
+        <div class="challenge-card fade-in">
+          <p class="ch-num">Challenge 03</p>
+          <h3 class="ch-title">Charge</h3>
+          <div class="ch-value">200 g</div>
+          <p class="ch-exig">À 45° · Sans fléchir</p>
+          <p class="ch-desc">L'échelle positionnée à 45° supporte une charge accrochée à son extrémité sans déformation excessive ni perte d'équilibre.</p>
+        </div>
+
+        <div class="challenge-card fade-in">
+          <p class="ch-num">Challenge +</p>
+          <h3 class="ch-title">Inclinaison</h3>
+          <div class="ch-value">45° / 90°</div>
+          <p class="ch-exig">Positions verrouillées</p>
+          <p class="ch-desc">Système transat — un renfort se cale dans des blocs à deux positions définies. Stable sans maintien extérieur.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MÉCANISMES -->
+  <section id="mecanismes">
+    <div class="container">
+      <p class="section-label fade-in">Conception</p>
+      <h2 class="section-title fade-in">Les mécanismes</h2>
+      <div class="mecas-grid">
+
+        <div class="meca-item fade-in">
+          <div class="meca-img">
+            <!--
+              POUR AJOUTER UNE PHOTO :
+              1. Upload ton image dans le repo GitHub (ex: rotation.jpg)
+              2. Remplace le bloc "meca-img-placeholder" par :
+              <img src="rotation.jpg" alt="Mécanisme de rotation">
+            -->
+            <div class="meca-img-placeholder">
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="4" y="4" width="28" height="28" rx="4" stroke="#ddd" stroke-width="1.5"/><path d="M4 24L12 16L18 22L24 14L32 24" stroke="#ddd" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <p>Photo rotation<br>à ajouter</p>
+            </div>
+          </div>
+          <div>
+            <p class="meca-num">Mécanisme 01</p>
+            <h3 class="meca-title">Rotation</h3>
+            <span class="meca-value">↻ 360°</span>
+            <p class="meca-desc">Un grand pignon sert de base à l'ensemble du système. Un second pignon plus petit fait office de manivelle — actionnable directement à la main, il permet une rotation fluide, continue, et contrôlée de 0° jusqu'à 360°. Le challenge demandait 90°, notre système va bien au-delà.</p>
+          </div>
+        </div>
+
+        <div class="meca-item reverse fade-in">
+          <div class="meca-img">
+            <div class="meca-img-placeholder">
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="4" y="4" width="28" height="28" rx="4" stroke="#ddd" stroke-width="1.5"/><path d="M4 24L12 16L18 22L24 14L32 24" stroke="#ddd" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <p>Photo déploiement<br>à ajouter</p>
+            </div>
+          </div>
+          <div>
+            <p class="meca-num">Mécanisme 02</p>
+            <h3 class="meca-title">Déploiement</h3>
+            <span class="meca-value">↔ ×2</span>
+            <p class="meca-desc">L'échelle se déploie de façon télescopique via un mécanisme manuel guidé par glissières. En fin de course, une butée maintient l'échelle en position haute sans intervention — le déploiement est stable, réversible, et s'effectue sans à-coups.</p>
+          </div>
+        </div>
+
+        <div class="meca-item fade-in">
+          <div class="meca-img">
+            <div class="meca-img-placeholder">
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="4" y="4" width="28" height="28" rx="4" stroke="#ddd" stroke-width="1.5"/><path d="M4 24L12 16L18 22L24 14L32 24" stroke="#ddd" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <p>Photo inclinaison<br>à ajouter</p>
+            </div>
+          </div>
+          <div>
+            <p class="meca-num">Mécanisme 03</p>
+            <h3 class="meca-title">Inclinaison</h3>
+            <span class="meca-value">📐 45° / 90°</span>
+            <p class="meca-desc">Un système "transat" : un renfort vient se caler dans des blocs positionnés à 45° et à 90°. Deux positions nettes, stables et verrouillées sans maintien extérieur. Le système supporte une charge de 200 g accrochée à l'extrémité à 45° sans fléchir.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ÉCOCONCEPTION -->
+  <section class="eco-section" id="ecoconception">
+    <div class="container">
+      <p class="section-label fade-in">Démarche</p>
+      <h2 class="section-title fade-in">Écoconception</h2>
+      <div class="eco-grid">
+
+        <div class="eco-card fade-in">
+          <div class="eco-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2C11 2 16 7 16 13C16 16 14.2 17.5 13 17.5C13 14 11.5 11.5 11 10C11 10 8.5 13.5 8.5 17.5C7.3 17.5 5.5 16 5.5 13C5.5 7.5 9 3.5 11 2Z" fill="rgba(255,200,200,0.8)"/></svg>
+          </div>
+          <h3 class="eco-card-title">Bois découpé laser</h3>
+          <p class="eco-card-desc">Matériau principal sur l'ensemble du prototype. Le bois est renouvelable, découpé avec précision, et génère un minimum de chutes.</p>
+        </div>
+
+        <div class="eco-card fade-in">
+          <div class="eco-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="4" y="4" width="14" height="14" rx="2" stroke="rgba(255,200,200,0.8)" stroke-width="1.5"/><path d="M8 11H14M11 8V14" stroke="rgba(255,200,200,0.8)" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3 class="eco-card-title">Impression 3D réduite</h3>
+          <p class="eco-card-desc">Limitée aux pièces strictement nécessaires : blocs d'inclinaison du transat et pieds de base. Aucun plastique superflu.</p>
+        </div>
+
+        <div class="eco-card fade-in">
+          <div class="eco-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 4L14 8H8L11 4Z" fill="rgba(255,200,200,0.8)"/><path d="M11 18L8 14H14L11 18Z" fill="rgba(255,200,200,0.8)"/><path d="M4 11L8 8V14L4 11Z" fill="rgba(255,200,200,0.5)"/><path d="M18 11L14 8V14L18 11Z" fill="rgba(255,200,200,0.5)"/></svg>
+          </div>
+          <h3 class="eco-card-title">Visserie réemployée</h3>
+          <p class="eco-card-desc">Clous et éléments d'assemblage issus de stocks existants, réemployés pour l'assemblage. Réduction de l'achat de matière neuve.</p>
+        </div>
+
+        <div class="eco-card fade-in">
+          <div class="eco-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="7" stroke="rgba(255,200,200,0.8)" stroke-width="1.5"/><path d="M11 7V11L14 13" stroke="rgba(255,200,200,0.8)" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3 class="eco-card-title">Zéro électronique</h3>
+          <p class="eco-card-desc">Aucun composant électronique, aucune pile, aucun moteur. Un mécanisme 100 % mécanique, durable et réparable.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ÉQUIPE -->
+  <section id="equipe">
+    <div class="container" style="text-align: center;">
+      <p class="section-label fade-in">Derrière le projet</p>
+      <h2 class="section-title fade-in" style="text-align:center;">L'équipe</h2>
+      <div class="team-grid fade-in">
+        <!--
+          POUR CHAQUE MEMBRE :
+          1. Upload sa photo dans le repo (ex: prenom.jpg)
+          2. Remplace les initiales par : <img src="prenom.jpg" alt="Prénom">
+          3. Mets à jour le nom et le rôle
+          Duplique un .team-card pour ajouter des membres
+        -->
+        <div class="team-card">
+          <div class="team-avatar"><span class="team-initials">T</span></div>
+          <p class="team-name">Prénom</p>
+          <p class="team-role">Rôle</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar"><span class="team-initials">A</span></div>
+          <p class="team-name">Prénom</p>
+          <p class="team-role">Rôle</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar"><span class="team-initials">B</span></div>
+          <p class="team-name">Prénom</p>
+          <p class="team-role">Rôle</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar"><span class="team-initials">C</span></div>
+          <p class="team-name">Prénom</p>
+          <p class="team-role">Rôle</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar"><span class="team-initials">D</span></div>
+          <p class="team-name">Prénom</p>
+          <p class="team-role">Rôle</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">🔥 Elevation 2.0</div>
+    <p class="footer-sub">PIX1 · ESILV · Showroom Paris · 2 juin 2026</p>
+    <div class="footer-divider"></div>
+    <p class="footer-bottom">Équipe ___ · Projet PIX1 · 2025–2026</p>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
